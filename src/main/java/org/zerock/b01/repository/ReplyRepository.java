@@ -11,4 +11,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   // 페이징 처리 위해서, JPQL 문법 이용하기.
   @Query("select r from Reply r where r.board.bno = :bno")
   Page<Reply> listOfBoard(Long bno, Pageable pageable);
+
+  void deleteByBoard_Bno(Long bno);
 }

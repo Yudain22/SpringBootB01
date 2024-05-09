@@ -23,7 +23,7 @@ public class ReplyRepositoryTests {
 
     // 더미 데이터 예제
     // 게시글 번호 100번, 100번 게시글에 댓글 추가중.
-    Long bno = 100L;
+    Long bno = 2L;
 
     // Reply 클래스에 멤버로 사용될 더미 예제
     Board board = Board.builder().bno(bno).build();
