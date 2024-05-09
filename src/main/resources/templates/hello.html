@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 th:text="${msg}"></h1>
+    <!--/* th:with : 타임리프의 변수선언 방식 */-->
+    <div th:with="num1 = ${10}, num2=${20}">
+        <h4 th:text="${num1%num2}"></h4>
+    </div>
+    <!--/* <h3 th:each="${sos}">SOS</h3> 브라우저에서 출력하지 않는 주석처리 */-->
+    <!-- <h3 th:each="${asd}">ASD</h3> 브라우저에서 출력하는 주석 처리-->
+    <!--/*
+    <div>
+        <h1>AAAA</h1> 브라우저에서 출력하지 않는 주석처리
+    </div>
+    */-->
+    <!--
+        <div>
+            <h1>BBBB</h1> 브라우저에서 출력하는 주석 처리
+        </div>
+        -->
+</body>
+</html>
+
+
+
+
+
+
+
