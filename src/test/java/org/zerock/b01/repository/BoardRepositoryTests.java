@@ -1,5 +1,6 @@
 package org.zerock.b01.repository;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.b01.domain.Board;
+import org.zerock.b01.domain.BoardImage;
 import org.zerock.b01.dto.BoardListReplyCountDTO;
 
 import java.util.List;
@@ -113,6 +115,7 @@ public class BoardRepositoryTests {
 
   @Test
   public void testInsertWithImages(){
+    //보드 내용 생성
     Board board = Board.builder()
             .title("Image Test")
             .content("첨부파일 테스트")
@@ -120,9 +123,24 @@ public class BoardRepositoryTests {
             .build();
 
     for (int i = 0; i < 3; i++){
+      //addImage 사용, UUID 랜덤으로 생성, file n(반복된 수).jpg
       board.addImage(UUID.randomUUID().toString(),"file"+i+".jpg");
     }
     boardRepository.save(board);
+  }
+
+  @Test
+  public void testReadWithImages(){
+    //PK를 이용해 게시글 SELECT 실행
+    Optional<Board> result = boardRepository.findByIdWithImages(1L);
+    //데이터가 없는 경우 에러 발생
+    Board board = result.orElseThrow();
+    //데이터 확인 로그
+    log.info(board);
+    log.info("--------------------");
+    for (BoardImage boardImage : board.getImageSet()){
+      log.info(boardImage);
+    }
   }
 }
 
