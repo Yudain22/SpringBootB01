@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.domain.BoardImage;
+import org.zerock.b01.dto.BoardListAllDTO;
 import org.zerock.b01.dto.BoardListReplyCountDTO;
 
 import java.util.List;
@@ -170,6 +171,48 @@ public class BoardRepositoryTests {
       replyRepository.deleteByBoard_Bno(bno);
       boardRepository.deleteById(bno);
     }
+
+    @Test
+    public void testInsertAll(){
+    for(int i = 1; i<=100; i++){
+      Board board = Board.builder()
+              .title("Title.."+i)
+              .content("Content.."+i)
+              .writer("Writer.."+i)
+              .build();
+
+      for (int j = 0; j<3; j++){
+        if(i% 5 == 0){
+          continue;
+        }
+        board.addImage(UUID.randomUUID().toString(),i+"file"+j+".jpg");
+      }
+      boardRepository.save(board);
+    }
+    }
+
+    @Transactional
+    @Test
+  public void testSerachImageReplyCount(){
+    Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
+    //boardRepository.searchWithAll(null,null, pageable);
+
+      Page<BoardListAllDTO> result = boardRepository.searchWithAll(null,null,pageable);
+
+      log.info("--------------");
+      log.info(result.getTotalElements());
+
+      result.getContent().forEach(boardListAllDTO -> log.info(boardListAllDTO));
+    }
+
+
+
+
+
+
+
+
+
 }
 
 
