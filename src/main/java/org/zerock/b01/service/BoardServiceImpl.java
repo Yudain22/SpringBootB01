@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.dto.*;
 import org.zerock.b01.repository.BoardRepository;
+import org.zerock.b01.repository.ReplyRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,32 +23,63 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService {
   private final ModelMapper modelMapper;
   private final BoardRepository boardRepository;
+  private final ReplyRepository replyRepository;
 
+
+//  @Override
+//  public Long register(BoardDTO boardDTO) {
+//    Board board = modelMapper.map(boardDTO, Board.class);
+//    Long bno = boardRepository.save(board).getBno();
+//    return bno;
+//  }
   @Override
-  public Long register(BoardDTO boardDTO) {
-    Board board = modelMapper.map(boardDTO, Board.class);
+  public Long register(BoardDTO boardDTO){
+    Board board = dtoToEntity(boardDTO);
     Long bno = boardRepository.save(board).getBno();
     return bno;
   }
 
-  @Override
-  public BoardDTO readOne(Long bno) {
-    Optional<Board> result = boardRepository.findById(bno);
-    Board board = result.orElseThrow();
-    BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
-    return boardDTO;
-  }
+//  @Override
+//  public BoardDTO readOne(Long bno) {
+//    Optional<Board> result = boardRepository.findById(bno);
+//    Board board = result.orElseThrow();
+//    BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+//    return boardDTO;
+//  }
+@Override
+public BoardDTO readOne(Long bno) {
+  Optional<Board> result = boardRepository.findByIdWithImages(bno);
+  Board board = result.orElseThrow();
+  BoardDTO boardDTO = entityToDTO(board);
+  return boardDTO;
+}
 
+//  @Override
+//  public void modify(BoardDTO boardDTO) {
+//    Optional<Board> result = boardRepository.findById(boardDTO.getBno());
+//    Board board = result.orElseThrow();
+//    board.change(boardDTO.getTitle(), boardDTO.getContent());
+//    boardRepository.save(board);
+//  }
   @Override
   public void modify(BoardDTO boardDTO) {
     Optional<Board> result = boardRepository.findById(boardDTO.getBno());
     Board board = result.orElseThrow();
     board.change(boardDTO.getTitle(), boardDTO.getContent());
+
+    board.clearImages();
+    if (boardDTO.getFileNames() != null){
+      for(String fileNAme : boardDTO.getFileNames()) {
+        String[] arr = fileNAme.split("_");
+        board.addImage(arr[0], arr[1]);
+      }
+    }
     boardRepository.save(board);
   }
 
   @Override
   public void remove(Long bno) {
+    replyRepository.deleteByBoard_Bno(bno);
     boardRepository.deleteById(bno);
   }
 
@@ -96,8 +128,20 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
-    return null;
+    String[] types = pageRequestDTO.getTypes();
+    String keyword = pageRequestDTO.getKeyword();
+    Pageable pageable = pageRequestDTO.getPageable("bno");
+
+    Page<BoardListAllDTO> result =boardRepository.searchWithAll(types,keyword,pageable);
+
+    return PageResponseDTO.<BoardListAllDTO>withAll()
+            .pageRequestDTO(pageRequestDTO)
+            .dtoList(result.getContent())
+            .total((int)result.getTotalElements())
+            .build();
   }
+
+
 }
 
 
