@@ -41,6 +41,7 @@ public class BoardController {
                             , BindingResult bindingResult
                             , RedirectAttributes redirectAttributes) {
     log.info("board Post register.......");
+
     if(bindingResult.hasErrors()) {
       log.info("has errors.......");
       redirectAttributes.addFlashAttribute("errors",bindingResult.getAllErrors());
@@ -51,6 +52,7 @@ public class BoardController {
     redirectAttributes.addFlashAttribute("result",bno);
     return "redirect:/board/list";
   }
+
   @GetMapping({"/read","/modify"})
   public void read(Long bno, PageRequestDTO pageRequestDTO,Model model) {
     BoardDTO boardDTO = boardService.readOne(bno);
