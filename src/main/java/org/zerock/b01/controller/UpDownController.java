@@ -123,7 +123,7 @@ public class UpDownController {
                 //UUID : 중복되지 않는 아이디를 변수에 저장, 파일이름이 겹치지 않도록 파일이름에 추가하여 설정
                 String uuid = UUID.randomUUID().toString();
                 //파일이 저장되는 경로와 파일이름 함께 설정하는 코드
-                Path savePath = Paths.get(uploadPath, uuid + " " + originalName);
+                Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
 
                 boolean image = false;
 
