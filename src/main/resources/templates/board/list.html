@@ -46,13 +46,17 @@
                             </thead>
                             <tbody th:with="link = ${pageRequestDTO.getLink()}">
                             <tr th:each="dto:${responseDTO.dtoList}">
-                                <th scope="row">[[${dto.bno}]]</th>
+                                <td>[[${dto.bno}]]</td>
                                 <td>
-                                    <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">[[${dto.title}]]</a>
+                                    <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none"> [[${dto.title}]] </a>
 <!--                                    댓글 갯수 표현 추가하기-->
-                                    <span class="badge progress-bar-success" style="background-color: #FF0000">
+                                    <span class="badge progress-bar-success" style="background-color: #0a53be">
                                         [[${dto.replyCount}]]
                                     </span>
+                                    <div th:if="${dto.boardImages != null && dto.boardImages.size() > 0}">
+                                        <img style="width: 100px" th:each="boarImage: ${dto.boardImages}"
+                                             th:src="|/view/s_${boarImage.uuid}_${boarImage.fileName}|">
+                                    </div>
                                 </td>
                                 <td>[[${dto.writer}]]</td>
                                 <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
