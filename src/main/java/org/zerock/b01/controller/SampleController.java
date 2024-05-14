@@ -28,6 +28,11 @@ public class SampleController {
   @Autowired
   private NoticeService noticeService;
 
+  @GetMapping("/")
+  public String index() {
+    return "forward:/board/list";
+  }
+
   @GetMapping("/hello")
   public void hello(Model model) {
     log.info("hello......................");
