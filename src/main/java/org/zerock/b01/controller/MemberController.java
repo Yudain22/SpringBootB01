@@ -54,4 +54,9 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("result ","success");
         return "redirect:/member/login";
     }
+
+    @GetMapping("/modify")
+    public void modifyGet(){
+        log.info("modify get........");
+    }
 }

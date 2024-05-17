@@ -5,20 +5,24 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Getter
 @Setter
 @ToString
 //extends는 MemberSecurityDTO가 User를 상속받고 있음을 의미
-public class MemberSecurityDTO extends User {
+public class MemberSecurityDTO extends User implements OAuth2User {
     //멤버 변수 설정
     private String mid;
     private String mpw;
     private String email;
-    private Boolean del;
-    private Boolean social;
+    private boolean del;
+    private boolean social;
+
+    private Map<String, Object> props;
 
     //생성자 : MemberSecurityDTO 객체를 만들기 위해 생성
     //생성자 안 만들면 기본 생성자 private Member = new member(); 형태의  기본생성자 생김
@@ -33,5 +37,15 @@ public class MemberSecurityDTO extends User {
         this.email = email;
         this.del = del;
         this.social = social;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.props;
+    }
+
+    @Override
+    public String getName(){
+        return this.mid;
     }
 }
